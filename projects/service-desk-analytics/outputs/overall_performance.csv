@@ -1,0 +1,2 @@
+total_tickets,resolved_tickets,open_or_in_progress,resolution_rate_pct,avg_response_minutes,avg_resolution_hours,avg_satisfaction,within_24h_sla_pct,reopened_rate_pct
+1500,1211,289,80.73,272.47,22.0,3.86,61.6,12.33
