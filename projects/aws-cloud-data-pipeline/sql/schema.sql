@@ -1,6 +1,7 @@
-DROP TABLE IF EXISTS cloud_orders;
+-- AWS Cloud Data Pipeline
+-- Database schema for processed e-commerce orders
 
-CREATE TABLE cloud_orders (
+CREATE TABLE IF NOT EXISTS cloud_orders (
     order_id VARCHAR(20) PRIMARY KEY,
     order_date TIMESTAMP NOT NULL,
     customer_id VARCHAR(20) NOT NULL,
