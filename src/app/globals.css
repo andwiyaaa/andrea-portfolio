@@ -1,28 +1,10 @@
 @import "tailwindcss";
 
-/* =============================================================
-   ANDREA I. DUCOSIN — PORTFOLIO
-   Single source of truth. Structure:
-     1. Tokens
-     2. Base
-     3. Continuous canvas
-     4. Motion system
-     5. Layout primitives
-     6. Navigation
-     7. Hero
-     8. Sections
-     9. Surfaces
-    10. Rows & lists
-    11. About / Contact
-    12. Tool constellation
-    13. Footer
-    14. Responsive
-    15. Reduced motion
-   ============================================================= */
 
-/* ---------- 1. TOKENS ---------- */
+
+
 :root {
-  /* Reference palette: near-black + plum/burgundy + crimson/magenta + warm orange. */
+  
   --ink: #140610;
   --ink-deep: #0b0b0b;
   --ink-warm: #240a1b;
@@ -32,21 +14,21 @@
   --magenta: #e51d64;
   --hot-pink: #ff3d76;
 
-  /* Semantic surfaces — opaque enough for clarity, lightly translucent where depth helps. */
+  
   --surface-1: rgba(24, 8, 20, 0.92);
   --surface-2: rgba(38, 12, 29, 0.94);
   --surface-3: rgba(55, 15, 35, 0.96);
   --surface-raised: rgba(72, 18, 40, 0.98);
   --surface-hover: rgba(104, 22, 48, 0.98);
 
-  /* Semantic text. */
+  
   --text-1: #fffafa;
   --text-2: #ffeaed;
   --text-3: #d7aebc;
   --text-4: #ad7f90;
   --text-on-accent: #18050d;
 
-  /* Accents from the reference. Strong red is reserved for emphasis; orange is secondary. */
+  
   --orange: #ff8800;
   --orange-deep: #d86d00;
   --orange-light: #ffad45;
@@ -54,7 +36,7 @@
   --accent-soft: #ff3d76;
   --accent-warm: #ff8800;
 
-  /* Borders and feedback. */
+  
   --line: rgba(255, 234, 237, 0.14);
   --line-strong: rgba(255, 61, 118, 0.38);
   --line-accent: rgba(255, 136, 0, 0.58);
@@ -63,13 +45,13 @@
   --color-success: #5ed39a;
   --color-info: #9bcfff;
 
-  /* Gradient tokens. */
+  
   --gradient-primary: linear-gradient(135deg, #ff0000 0%, #e51d64 52%, #ff8800 100%);
   --gradient-secondary: linear-gradient(135deg, #460d27 0%, #8f1237 55%, #e51d64 100%);
   --gradient-surface: linear-gradient(135deg, rgba(70, 13, 39, 0.96), rgba(32, 8, 25, 0.96));
   --gradient-glow: radial-gradient(circle at center, rgba(229, 29, 100, 0.38), rgba(255, 0, 0, 0.10) 45%, transparent 74%);
 
-  /* Legacy aliases kept for existing JSX/Tailwind utilities. */
+  
   --espresso-ink: var(--text-on-accent);
   --cream-white: var(--text-2);
   --orange-1: var(--accent);
@@ -80,14 +62,14 @@
   --muted: var(--text-3);
   --muted-strong: var(--text-2);
 
-  /* Geometry */
+  
   --content-width: 1440px;
   --page-padding: clamp(22px, 4vw, 56px);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
 
-  /* Motion */
+  
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-fast: 0.25s;
@@ -105,18 +87,13 @@
   --color-surface: var(--surface-2);
   --color-surface-elevated: var(--surface-3);
   --color-border: var(--line);
-  /* Every `text-white`, `bg-white`, `border-white` (and their /NN opacity
-     variants — text-white/50 etc.) across the case-study pages resolves
-     through this token. Redefining it here retunes every one of those
-     ~180 utility usages to the new warm cream in a single edit, rather
-     than hand-editing each file — Tailwind v4 reads @theme values at
-     build time, so this is a real, systemic recolor, not a workaround. */
+  
   --color-white: var(--text-2);
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
-/* ---------- 2. BASE ---------- */
+
 * {
   box-sizing: border-box;
 }
@@ -124,7 +101,7 @@
 html {
   background: var(--ink);
   scroll-behavior: smooth;
-  /* Offset anchor jumps so the fixed nav never covers the target */
+  
   scroll-padding-top: 96px;
 }
 
@@ -191,11 +168,7 @@ svg {
   max-width: 100%;
 }
 
-/* ---------- 3. CONTINUOUS CANVAS ----------
-   One fixed background for the entire site. Sections never paint their
-   own scene, so there is no seam anywhere in the scroll. Built from
-   soft radial gradients rather than blur filters — same look, none of
-   the per-frame compositing cost. */
+
 .ambient-field {
   position: fixed;
   inset: 0;
@@ -205,21 +178,12 @@ svg {
   background: var(--ink);
 }
 
-/* The drifting sheet. Taller than the viewport so it can translate on
-   scroll without ever exposing an edge. One transform, one element. */
+
 .ambient-sheet {
   position: absolute;
-  /* Exactly the size of .ambient-field (the viewport). No offset, no
-     extra height — see the component comment for why. */
+  
   inset: 0;
-  /* Espresso / umber / rust / amber / cream, sampled from the reference
-     image's own relationships rather than its literal pixel layout.
-     One deliberate departure from the reference: its brightest band runs
-     across the very top edge, but the nav bar sits directly on this
-     layer with no card behind it until the page is scrolled — a bright
-     fill there would fight the nav text. So the vivid energy is pulled
-     toward the right side and lower frame instead, and the top-left
-     (nav, hero eyebrow) stays on the dark valley throughout. */
+  
   background:
     radial-gradient(62% 56% at 56% 52%, rgba(229, 29, 100, 0.42), transparent 72%),
     radial-gradient(46% 48% at 82% 34%, rgba(255, 0, 0, 0.18), transparent 70%),
@@ -228,8 +192,7 @@ svg {
     linear-gradient(145deg, #0b0b0b 0%, #140610 32%, #2e0b22 58%, #460d27 82%, #240a1b 100%);
 }
 
-/* Global grid. Replaces the per-section grids that used to band at
-   every section boundary. */
+
 .ambient-grid {
   position: absolute;
   inset: 0;
@@ -256,8 +219,7 @@ svg {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
 }
 
-/* Every page-level container is transparent. The canvas shows through
-   from the first pixel of the hero to the last pixel of the footer. */
+
 .site-shell,
 .hero-dark,
 .section-dark,
@@ -266,10 +228,7 @@ svg {
   background: transparent;
 }
 
-/* ---------- 4. MOTION SYSTEM ----------
-   One scroll-reveal primitive used across every page. Driven by a
-   single IntersectionObserver in site-experience.tsx, animating only
-   opacity and transform. */
+
 [data-reveal] {
   opacity: 0;
   transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 22px), 0);
@@ -299,17 +258,13 @@ svg {
   --reveal-y: 38px;
 }
 
-/* Observer hook only: the element itself doesn't move, it just needs the
-   `is-revealed` class so a child animation can key off it. */
+
 [data-reveal="static"] {
   opacity: 1;
   transform: none;
 }
 
-/* Headline mask container. Each line wipes up from behind its own edge.
-   The travel itself is driven by motion on page load (see the hero and
-   page headings) — a CSS transition can't fire from an initial class, so
-   this stays a pure overflow clip. */
+
 .line-mask {
   display: block;
   overflow: hidden;
@@ -319,12 +274,12 @@ svg {
   display: block;
 }
 
-/* Stagger: children inherit an index-based delay set in markup. */
+
 .reveal-stagger > * {
   --reveal-delay: calc(var(--i, 0) * 70ms);
 }
 
-/* Scroll progress bar */
+
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -341,7 +296,7 @@ svg {
   z-index: 1;
 }
 
-/* ---------- 5. LAYOUT PRIMITIVES ---------- */
+
 .site-container {
   width: calc(100% - (var(--page-padding) * 2));
   max-width: var(--content-width);
@@ -359,7 +314,7 @@ svg {
   padding-block: clamp(64px, 7vw, 108px);
 }
 
-/* Typography scale */
+
 .hero-title {
   max-width: 920px;
   margin: 0;
@@ -369,7 +324,7 @@ svg {
   font-weight: 500;
   text-wrap: balance;
 }
-/* Child-scoped so the inner mask spans don't also match. */
+
 .hero-title > .line-mask {
   color: var(--text-3);
 }
@@ -396,7 +351,7 @@ svg {
   text-wrap: balance;
 }
 
-/* Keep the CTA descenders fully visible at tight display sizes. */
+
 .work-cta-title {
   line-height: 1.06;
   padding-bottom: 0.06em;
@@ -425,8 +380,7 @@ svg {
   color: transparent;
 }
 
-/* ---------- 6. NAVIGATION ----------
-   Solid surface on scroll. No translucent filters. */
+
 .site-nav-wrap {
   position: fixed;
   top: 0;
@@ -498,7 +452,7 @@ svg {
   font-size: 12px;
 }
 
-/* Animated underline — a micro-interaction with no layout shift. */
+
 .nav-link {
   position: relative;
   padding-block: 4px;
@@ -543,7 +497,7 @@ svg {
   transform: translateY(-1px);
 }
 
-/* ---------- 7. HERO ---------- */
+
 .hero-dark {
   position: relative;
   min-height: min(880px, 100svh);
@@ -600,7 +554,7 @@ svg {
   letter-spacing: -0.012em;
 }
 
-/* Buttons — solid fills, no glass, no sheen sweep. */
+
 .button-light,
 .button-dark {
   display: inline-flex;
@@ -651,7 +605,7 @@ svg {
   color: var(--text-1);
 }
 
-/* Hero portrait stack — solid panels with real elevation. */
+
 .portrait-frame {
   position: relative;
   padding: 7px;
@@ -809,7 +763,7 @@ svg {
   }
 }
 
-/* ---------- 8. SECTIONS ---------- */
+
 .section-dark,
 .section-light {
   position: relative;
@@ -830,7 +784,7 @@ svg {
   letter-spacing: 0.2em;
 }
 
-/* The kicker rule draws itself in on reveal instead of looping forever. */
+
 .section-kicker-row::after {
   content: "";
   position: absolute;
@@ -884,10 +838,7 @@ svg {
   letter-spacing: -0.01em;
 }
 
-/* ---------- 9. SURFACES ----------
-   `.surface-card` is the shared solid surface primitive
-   Solid fill,
-   hairline border, real shadow. No translucent filters. */
+
 .surface-card {
   position: relative;
   background: var(--surface-2);
@@ -961,7 +912,7 @@ svg {
   font-weight: 400;
 }
 
-/* The connecting line draws itself when the board scrolls in. */
+
 .signal-line {
   height: 1px;
   background: linear-gradient(90deg, rgba(255, 0, 0, 0.16), var(--orange), rgba(255, 0, 0, 0.16));
@@ -983,9 +934,7 @@ svg {
   letter-spacing: 0.15em;
 }
 
-/* ---------- 10. ROWS & LISTS ----------
-   Shared interaction model: the row lifts, its rule wipes in, its
-   arrow travels. Used by project rows, contact rows and focus rows. */
+
 .project-list,
 .contact-grid,
 .education-list {
@@ -1115,7 +1064,7 @@ svg {
   text-wrap: balance;
 }
 
-/* ---------- 11. ABOUT / CONTACT ---------- */
+
 .page-hero-dark {
   position: relative;
   min-height: 42vh;
@@ -1176,8 +1125,7 @@ svg {
   box-shadow: 0 30px 80px rgba(11, 11, 11, 0.48);
 }
 
-/* Slow scale-back as the portrait enters — an image reveal rather
-   than a plain fade. */
+
 .about-photo img {
   transform: scale(1.08);
   transition: transform 1.6s var(--ease-out);
@@ -1414,7 +1362,7 @@ svg {
   color: var(--orange-light);
 }
 
-/* ---------- 12. TOOL CONSTELLATION ---------- */
+
 .tool-constellation {
   position: relative;
   width: 100%;
@@ -1589,7 +1537,7 @@ svg {
 .tool-node-17 { right: 10%; top: 54%; }
 .tool-node-18 { left: 26%; top: 59%; transform: none; }
 
-/* ---------- 13. FOOTER ---------- */
+
 .site-footer {
   position: relative;
   border-top: 1px solid var(--line);
@@ -1649,9 +1597,7 @@ svg {
   transform: translateY(-1px);
 }
 
-/* ---------- 13b. MARQUEE ----------
-   Two identical groups translating -50% gives a seamless loop with no
-   JS per frame. Paused off-screen by the component. */
+
 .marquee {
   position: relative;
   overflow: hidden;
@@ -1709,12 +1655,7 @@ svg {
   background: var(--orange);
 }
 
-/* ---------- 13c. SEQUENCE RAIL ----------
-   A responsive grid of equal-width cards, not a fixed-width track list.
-   `auto-fit` fills exactly as many columns as the available width allows
-   and stretches them to share it evenly — so there is never leftover
-   grid area for the container's own background to show through, at any
-   viewport width. Cards wrap to a new row rather than causing overflow. */
+
 .sequence-rail {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1803,7 +1744,7 @@ svg {
   transform: scaleX(1);
 }
 
-/* ---------- 14. RESPONSIVE ---------- */
+
 @media (max-width: 1100px) {
   .direction-layout {
     grid-template-columns: minmax(0, 1fr) 380px;
@@ -1845,8 +1786,7 @@ svg {
     height: 480px;
   }
 
-  /* Pull the overlapping hero panels in once the grid is single-column,
-     so their negative offsets can't sit under the page edge. */
+  
   .hero-spec-panel {
     left: 8px;
     width: min(258px, calc(100% - 16px));
@@ -1886,8 +1826,7 @@ svg {
     display: none;
   }
 
-  /* The absolutely-positioned hero panels return to normal flow so they
-     can never push the layout sideways on a phone. */
+  
   .hero-spec-panel {
     position: relative;
     left: auto;
@@ -1935,7 +1874,7 @@ svg {
     grid-row: 1 / span 2;
   }
 
-  /* Row hover is a pointer affordance; on touch it only wastes space. */
+  
   .project-row-light:hover,
   .contact-row:hover {
     padding-inline: 0;
@@ -2010,7 +1949,7 @@ svg {
     font-size: 10px;
   }
 
-  /* Shorter travel on small screens — large offsets read as jitter. */
+  
   [data-reveal] {
     --reveal-y: 14px;
     --reveal-x: 0px;
@@ -2020,10 +1959,8 @@ svg {
   }
 }
 
-/* ---------- 14b. TOOL CONSTELLATION RESPONSIVE ---------- */
-/* The desktop constellation keeps its orbital composition. On tablets and
-   phones, the same tools become a stable two-column layout so none of the
-   absolute nodes can collide or run beyond the viewport. */
+
+
 @media (max-width: 900px) {
   .tool-constellation {
     height: auto;
@@ -2083,7 +2020,7 @@ svg {
   }
 }
 
-/* ---------- 14c. AWS JOURNEY ---------- */
+
 .aws-journey-card {
   overflow: hidden;
 }
@@ -2100,14 +2037,13 @@ svg {
   border: 1px solid rgba(255, 234, 237, 0.08);
 }
 
-/* ---------- 14d. REFERENCE COLOR SYSTEM / INTERACTION ---------- */
-/* Tailwind's generic black/white utilities are remapped so the case-study
-   pages inherit the same semantic theme without editing hundreds of JSX nodes. */
+
+
 .bg-black { background-color: var(--ink-deep) !important; }
 .text-black { color: var(--text-on-accent) !important; }
 .border-black { border-color: rgba(11, 11, 11, 0.45) !important; }
 
-/* Solid / lightly translucent surfaces — no backdrop blur. */
+
 .surface-card,
 .surface-card-raised,
 .signal-board,
@@ -2118,7 +2054,7 @@ svg {
 .aws-journey-media {
 }
 
-/* Consistent accent hierarchy. */
+
 .hero-title em,
 .project-type,
 .sequence-count,
@@ -2129,7 +2065,7 @@ svg {
   color: var(--orange-light);
 }
 
-/* Primary interactive controls. */
+
 .button-light {
   background: var(--text-1) !important;
   color: var(--text-on-accent) !important;
@@ -2164,7 +2100,7 @@ svg {
   color: var(--text-1) !important;
 }
 
-/* Project/contact rows: controlled crimson-magenta hover, never neon red everywhere. */
+
 .project-row-light:hover,
 .contact-row:hover {
   background: var(--surface-2);
@@ -2175,7 +2111,7 @@ svg {
   color: var(--text-1);
 }
 
-/* Tool/sequence surfaces use a related but quieter burgundy ladder. */
+
 .tool-node-inner:hover,
 .sequence-card:hover,
 .surface-card:hover {
@@ -2193,7 +2129,7 @@ svg {
   border-color: var(--orange);
 }
 
-/* Form/control-like fields and tags. */
+
 input,
 textarea,
 select {
@@ -2208,13 +2144,13 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(229, 29, 100, 0.14);
 }
 
-/* Warm feedback states. */
+
 .status-error { color: var(--color-error); }
 .status-warning { color: var(--color-warning); }
 .status-success { color: var(--color-success); }
 .status-info { color: var(--color-info); }
 
-/* The new palette is strongest in the background; local sections stay transparent. */
+
 html,
 body,
 .site-shell,
@@ -2226,8 +2162,7 @@ body,
   background-color: transparent;
 }
 
-/* ---------- 15. REDUCED MOTION ----------
-   Content still appears; it simply appears without travel. */
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -2256,7 +2191,7 @@ body,
     transform: scaleX(1);
   }
 
-  /* A permanently looping marquee is exactly what this query is for. */
+  
   .marquee-track {
     animation: none;
   }
@@ -2266,7 +2201,7 @@ body,
 }
 
 
-/* ---------- 15. ABOUT CREDENTIALS / PROJECTS ---------- */
+
 .section-overline-row {
   display: flex;
   align-items: center;

@@ -39,7 +39,7 @@ const stack = [
   "Linux", "Power BI", "Excel", "Git", "ETL", "Data Validation",
 ];
 
-// Split into lines so each can wipe up independently.
+
 const heroLines: ReactNode[] = [
   "Turning data,",
   "systems,",
@@ -51,9 +51,9 @@ const heroLines: ReactNode[] = [
 export default function Home() {
   const reduceMotion = useReducedMotion();
 
-  // Pointer parallax on the hero stack. This is the only pointer listener
-  // on the site, and it writes to motion values rather than React state so
-  // it never triggers a re-render.
+  
+  
+  
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, { stiffness: 45, damping: 22 });
@@ -68,8 +68,8 @@ export default function Home() {
   const codeY = useTransform(smoothY, [-1, 1], [-3, 3]);
 
   useEffect(() => {
-    // Skip entirely for reduced motion and for touch devices, where there
-    // is no hover pointer to track.
+    
+    
     if (reduceMotion) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
@@ -101,7 +101,7 @@ export default function Home() {
                 Data · Systems · Cloud
               </div>
 
-              {/* Each line wipes up from behind its own edge, staggered. */}
+              {}
               <h1 className="hero-title">
                 {heroLines.map((line, index) => (
                   <span key={index} className="line-mask">
@@ -213,8 +213,7 @@ export default function Home() {
         </a>
       </section>
 
-      {/* Continuous ticker — the one borrowed motion idea that suits a
-          technical portfolio: a running list of the actual stack. */}
+      {}
       <Marquee duration={44} label={`Working stack: ${stack.join(", ")}`}>
         {stack.map((item) => (
           <span className="marquee-item" key={item}>
@@ -289,8 +288,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* `data-reveal` here also drives the connector lines drawing
-                themselves in, via `.is-revealed .signal-line`. */}
+            {}
             <div className="signal-board" data-reveal="right">
               <div className="signal-board-top">
                 <span>WORKFLOW</span>

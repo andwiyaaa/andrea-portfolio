@@ -14,8 +14,8 @@ export default function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    // Single passive listener, and state only flips at the threshold, so
-    // React re-renders twice per page rather than once per scroll event.
+    
+    
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
     };

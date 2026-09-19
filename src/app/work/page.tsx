@@ -75,7 +75,7 @@ export default function WorkPage() {
       <SiteNav />
 
       <div className="relative z-10">
-        {/* Header */}
+        {}
         <section className="site-container pb-16 pt-36 md:pb-20 md:pt-44">
           <div className="max-w-5xl">
             <motion.div
@@ -113,7 +113,7 @@ export default function WorkPage() {
           </div>
         </section>
 
-        {/* Projects */}
+        {}
         <section className="site-container pb-24" data-reveal="fade">
           <div className="reveal-stagger border-t border-[var(--line)]">
             {projects.map((project, index) => (
@@ -128,12 +128,12 @@ export default function WorkPage() {
                   className="block py-7 md:py-8 lg:py-9"
                 >
                   <div className="grid gap-5 lg:grid-cols-[56px_minmax(0,1fr)_minmax(260px,390px)_36px] lg:items-center lg:gap-8">
-                    {/* Number */}
+                    {}
                     <div className="self-start pt-1 text-[10px] tracking-[0.16em] text-white/30 lg:self-auto lg:pt-0">
                       {project.number}
                     </div>
 
-                    {/* Title */}
+                    {}
                     <div className="min-w-0">
                       <p className="mb-1.5 text-[9px] uppercase tracking-[0.2em] text-[var(--orange-light)]">
                         {project.type}
@@ -150,7 +150,7 @@ export default function WorkPage() {
                       </div>
                     </div>
 
-                    {/* Description + tags */}
+                    {}
                     <div className="lg:pr-2">
                       <p className="body-copy text-sm leading-6">
                         {project.description}
@@ -168,7 +168,7 @@ export default function WorkPage() {
                       </div>
                     </div>
 
-                    {/* Arrow */}
+                    {}
                     <div className="hidden h-9 w-9 items-center justify-center rounded-full border border-[var(--line)] text-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-all duration-300 group-hover:border-[var(--orange)] group-hover:bg-[var(--orange)] group-hover:text-white lg:flex">
                       <ArrowUpRight size={15} />
                     </div>
@@ -179,7 +179,7 @@ export default function WorkPage() {
           </div>
         </section>
 
-        {/* Capabilities */}
+        {}
         <section className="site-container pb-24 md:pb-28" data-reveal>
           <div className="relative overflow-hidden border-y border-[var(--line)] py-8 md:py-10">
             <div className="pointer-events-none absolute -right-24 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-[var(--orange)]/8 blur-[100px]" />
@@ -219,7 +219,7 @@ export default function WorkPage() {
           </div>
         </section>
 
-        {/* CTA */}
+        {}
         <section className="site-container pb-24" data-reveal>
           <div className="relative overflow-hidden border-t border-[var(--line)] pt-12 md:pt-16">
             <div className="pointer-events-none absolute -right-32 top-0 h-64 w-64 rounded-full bg-[var(--orange)]/8 blur-[100px]" />
@@ -249,7 +249,7 @@ export default function WorkPage() {
           </div>
         </section>
 
-        {/* Footer */}
+        {}
         <SiteFooter />
       </div>
     </main>

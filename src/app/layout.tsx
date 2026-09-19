@@ -30,8 +30,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Scroll reveals start hidden and are shown by an observer. If JS
-            never runs, this makes sure no content stays invisible. */}
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>

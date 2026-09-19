@@ -65,7 +65,7 @@ export default function ApiPipelinePage() {
       <SiteNav />
 
       <div className="relative z-10">
-        {/* Hero */}
+        {}
         <section className="site-container pb-24 pt-36 md:pb-32 md:pt-44">
           <Link
             href="/work"
@@ -119,7 +119,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Architecture */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="01" label="Pipeline architecture" />
 
@@ -161,7 +161,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Transformation */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
@@ -218,7 +218,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Validation */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
             <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -265,7 +265,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Text analysis */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="04" label="Text analysis" />
 
@@ -286,7 +286,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* User activity */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
             <div>
@@ -339,7 +339,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Database */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--line)] md:grid-cols-3">
             <TechCard
@@ -362,7 +362,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Takeaway */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-strong)] bg-[var(--surface-3)] px-7 py-14 md:px-12 md:py-20">
             <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[var(--orange)]/15 blur-[110px]" />
@@ -384,7 +384,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Tools */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
             <p className="text-[10px] uppercase tracking-[0.2em] text-white/30">
@@ -406,7 +406,7 @@ export default function ApiPipelinePage() {
           </div>
         </section>
 
-        {/* Navigation */}
+        {}
         <section className="site-container pb-28" data-reveal>
           <div className="grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--line)] md:grid-cols-2">
             <ProjectLink

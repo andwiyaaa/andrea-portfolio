@@ -9,14 +9,7 @@ export type SequenceItem = {
   icon?: ReactNode;
 };
 
-/**
- * Numbered card grid — the "01 / 05  Method" pattern.
- *
- * `auto-fit` in the CSS sizes and wraps the cards to whatever the
- * container width allows, so this always reads as one aligned row (or
- * rows) of equal-width cards — never a track list narrower than its own
- * box with empty container background showing on one side.
- */
+
 export default function SequenceRail({ items }: { items: SequenceItem[] }) {
   const total = String(items.length).padStart(2, "0");
 

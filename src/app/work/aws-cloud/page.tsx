@@ -83,7 +83,7 @@ export default function AwsCloudPage() {
       <SiteNav />
 
       <div className="relative z-10">
-        {/* Hero */}
+        {}
         <section className="site-container pb-24 pt-36 md:pb-32 md:pt-44">
           <Link
             href="/work"
@@ -137,7 +137,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Architecture */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="01" label="Architecture" />
 
@@ -193,7 +193,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* AWS configuration */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="grid gap-5 lg:grid-cols-2">
             <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-9">
@@ -250,7 +250,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Processing */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="03" label="Processing" />
 
@@ -308,7 +308,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Status */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="04" label="Dataset overview" />
 
@@ -380,7 +380,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Revenue */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="surface-card surface-card-raised overflow-hidden rounded-[var(--radius-lg)] p-7 md:p-10">
             <SectionHeading number="05" label="Financial view" />
@@ -441,7 +441,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Categories */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="06" label="Completed categories" />
 
@@ -476,7 +476,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Payments */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <SectionHeading number="07" label="Payment analysis" />
 
@@ -518,7 +518,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Security / learning */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="grid gap-5 lg:grid-cols-2">
             <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-9">
@@ -559,7 +559,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Takeaway */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-strong)] bg-[var(--surface-3)] px-7 py-14 md:px-12 md:py-20">
             <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[var(--orange)]/15 blur-[110px]" />
@@ -581,7 +581,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Tools */}
+        {}
         <section className="site-container pb-32" data-reveal>
           <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
             <p className="text-[10px] uppercase tracking-[0.2em] text-white/30">
@@ -610,7 +610,7 @@ export default function AwsCloudPage() {
           </div>
         </section>
 
-        {/* Navigation */}
+        {}
         <section className="site-container pb-28" data-reveal>
           <div className="grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--line)] md:grid-cols-2">
             <ProjectLink
