@@ -1,25 +1,26 @@
 # AWS Cloud Data Pipeline
 
-An end-to-end cloud data pipeline that extracts e-commerce data from Amazon S3, processes and validates it with Python, loads it into PostgreSQL, and publishes the processed dataset back to S3.
+An end-to-end cloud data pipeline that moves e-commerce data through Amazon S3, Python ETL, PostgreSQL, and back to Amazon S3 for downstream use.
 
-## Project Overview
+## Overview
 
-This project demonstrates a complete data engineering workflow using AWS, Python, and PostgreSQL.
+This project demonstrates a repeatable data engineering workflow using AWS, Python, and PostgreSQL.
 
-The pipeline is designed to move data through a repeatable workflow:
+The pipeline follows:
 
-**Amazon S3 → EC2 / Python ETL → PostgreSQL → Amazon S3**
+**Amazon S3 → Python ETL → PostgreSQL → Amazon S3**
 
-The project focuses on:
+It covers:
 
-- Cloud-based data storage
-- Data extraction from S3
-- Data transformation and cleaning
-- Automated data quality validation
-- Relational database loading
-- SQL-based analytics
-- Processed-data publishing to S3
-- Repeatable pipeline execution
+- Cloud-based data ingestion
+- S3 data extraction and publishing
+- Python data transformation
+- Automated data-quality validation
+- PostgreSQL database loading
+- SQL analytics
+- Database-level quality checks
+- Environment-based configuration
+- End-to-end pipeline orchestration
 
 > **Project type:** Hands-on learning / portfolio project  
 > **Dataset:** Synthetic e-commerce order data  
@@ -28,49 +29,31 @@ The project focuses on:
 ## Architecture
 
 ```text
-                    ┌──────────────────────┐
-                    │     Amazon S3        │
-                    │                      │
-                    │ raw/cloud_orders.csv │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │    Amazon EC2        │
-                    │                      │
-                    │ Python ETL Pipeline   │
-                    │                      │
-                    │ Extract              │
-                    │ Transform            │
-                    │ Validate             │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │     PostgreSQL       │
-                    │                      │
-                    │    cloud_orders      │
-                    └──────────┬───────────┘
-                               │
-                               │ SQL Analytics
-                               ▼
-                    ┌──────────────────────┐
-                    │     Analytics        │
-                    │                      │
-                    │ Revenue              │
-                    │ Orders               │
-                    │ Customers            │
-                    │ Categories           │
-                    │ Payments             │
-                    └──────────────────────┘
-
-                               │
-                               │ Processed dataset
-                               ▼
-
-                    ┌──────────────────────┐
-                    │     Amazon S3        │
-                    │                      │
-                    │ processed/           │
-                    │ cloud_orders_clean   │
-                    └──────────────────────┘
+                    Amazon S3
+                       │
+             raw/cloud_orders.csv
+                       │
+                       ▼
+                  Python ETL
+                       │
+              ┌────────┴────────┐
+              │                 │
+           Extract          Transform
+                                │
+                              Validate
+                                │
+                                ▼
+                         PostgreSQL
+                         cloud_orders
+                                │
+                    ┌───────────┴───────────┐
+                    │                       │
+                    ▼                       ▼
+               SQL Analytics        Data Quality Checks
+                    │
+                    ▼
+              Processed Dataset
+                    │
+                    ▼
+                Amazon S3
+        processed/cloud_orders_clean.csv
