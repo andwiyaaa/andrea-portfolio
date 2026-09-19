@@ -8,57 +8,45 @@ This project demonstrates a complete data engineering workflow:
 
 **REST API → Raw JSON → Python Transformation → Data Validation → PostgreSQL → SQL Analytics**
 
-The pipeline uses JSONPlaceholder, a public mock REST API, as the source. The project focuses on demonstrating practical data pipeline design, data cleaning, validation, database loading, and analytical SQL.
+The pipeline uses JSONPlaceholder, a public mock REST API, as its data source. The project focuses on API data ingestion, data cleaning, validation, database loading, and analytical SQL.
 
-## Pipeline Architecture
+## Pipeline
 
 ```text
-┌──────────────────────────────┐
-│ JSONPlaceholder REST API     │
-│ /posts                       │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ Extract                      │
-│ Python                       │
-│ urllib / JSON                │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ Raw Data                     │
-│ data/raw/posts.json          │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ Transform                    │
-│ Python + Pandas              │
-│ - Standardize columns        │
-│ - Remove duplicates          │
-│ - Handle missing values      │
-│ - Calculate length metrics   │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ Data Validation              │
-│ Python                       │
-│ 10 automated checks          │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ PostgreSQL                   │
-│ api_pipeline_db              │
-│ posts table                  │
-└──────────────┬───────────────┘
-               │
-               ├─────────────────────┐
-               ▼                     ▼
-┌────────────────────────┐  ┌────────────────────────┐
-│ SQL Analytics          │  │ PostgreSQL Data        │
-│ analytics.sql          │  │ Quality Checks         │
-│                        │  │ data_quality.sql       │
-└────────────────────────┘  └────────────────────────┘
+JSONPlaceholder REST API
+          │
+          ▼
+       Extract
+          │
+          ▼
+     Raw JSON
+   posts.json
+          │
+          ▼
+      Transform
+          │
+          ├── Standardize columns
+          ├── Rename API fields
+          ├── Remove duplicates
+          ├── Handle missing values
+          ├── Clean text fields
+          └── Calculate length metrics
+          │
+          ▼
+      Validate
+          │
+          ├── Required columns
+          ├── Duplicate IDs
+          ├── Missing values
+          ├── Valid IDs
+          ├── Empty text fields
+          └── Calculated field checks
+          │
+          ▼
+     PostgreSQL
+      posts table
+          │
+          ├───────────────┐
+          ▼               ▼
+   SQL Analytics    Data Quality
+                         Checks
