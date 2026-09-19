@@ -1,193 +1,341 @@
-import Link from "next/link";
+"use client";
 
-const disciplines = [
-  "Data Analytics",
-  "Data Engineering",
-  "AWS / Cloud",
-  "IT & Systems",
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowDown, ArrowUpRight, Cloud, Database, Terminal } from "lucide-react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import type { CSSProperties, ReactNode } from "react";
+import { useEffect } from "react";
+import SiteNav from "@/components/site-nav";
+import SiteFooter from "@/components/site-footer";
+import Marquee from "@/components/marquee";
+
+const projects = [
+  {
+    number: "01",
+    type: "Data Analytics",
+    title: "Churn at Fit.ly",
+    description: "Customer behavior, churn patterns, and business metrics.",
+    href: "/work/fitly-churn",
+  },
+  {
+    number: "02",
+    type: "Data Engineering",
+    title: "E-commerce Data Pipeline",
+    description: "Cleaning, validation, PostgreSQL loading, and analytics.",
+    href: "/work/ecommerce-pipeline",
+  },
+  {
+    number: "03",
+    type: "AWS / Cloud",
+    title: "AWS Cloud Data Pipeline",
+    description: "S3, EC2, Python ETL, PostgreSQL, validation, and analytics.",
+    href: "/work/aws-cloud",
+  },
+];
+
+const stack = [
+  "SQL", "Python", "PostgreSQL", "Pandas", "AWS", "S3", "EC2",
+  "Linux", "Power BI", "Excel", "Git", "ETL", "Data Validation",
+];
+
+// Split into lines so each can wipe up independently.
+const heroLines: ReactNode[] = [
+  "Turning data,",
+  "systems,",
+  <>
+    and cloud into <em>clarity.</em>
+  </>,
 ];
 
 export default function Home() {
+  const reduceMotion = useReducedMotion();
+
+  // Pointer parallax on the hero stack. This is the only pointer listener
+  // on the site, and it writes to motion values rather than React state so
+  // it never triggers a re-render.
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const smoothX = useSpring(pointerX, { stiffness: 45, damping: 22 });
+  const smoothY = useSpring(pointerY, { stiffness: 45, damping: 22 });
+  const rotateY = useTransform(smoothX, [-1, 1], [-3.5, 3.5]);
+  const rotateX = useTransform(smoothY, [-1, 1], [3.5, -3.5]);
+  const visualX = useTransform(smoothX, [-1, 1], [-7, 7]);
+  const visualY = useTransform(smoothY, [-1, 1], [-6, 6]);
+  const panelX = useTransform(smoothX, [-1, 1], [7, -7]);
+  const panelY = useTransform(smoothY, [-1, 1], [5, -5]);
+  const codeX = useTransform(smoothX, [-1, 1], [-3, 3]);
+  const codeY = useTransform(smoothY, [-1, 1], [-3, 3]);
+
+  useEffect(() => {
+    // Skip entirely for reduced motion and for touch devices, where there
+    // is no hover pointer to track.
+    if (reduceMotion) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    const onPointerMove = (event: PointerEvent) => {
+      pointerX.set((event.clientX / window.innerWidth) * 2 - 1);
+      pointerY.set((event.clientY / window.innerHeight) * 2 - 1);
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onPointerMove);
+  }, [pointerX, pointerY, reduceMotion]);
+
+  const parallax = reduceMotion ? {} : { x: visualX, y: visualY };
+
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      {/* Background atmosphere */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[8%] top-[10%] h-72 w-72 rounded-full bg-cyan-300/10 blur-[120px]" />
-        <div className="absolute right-[5%] top-[35%] h-96 w-96 rounded-full bg-violet-400/10 blur-[140px]" />
-        <div className="absolute bottom-[-10%] left-[35%] h-80 w-80 rounded-full bg-sky-300/5 blur-[130px]" />
+    <main className="site-shell">
+      <SiteNav />
 
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-      </div>
+      <section className="hero-dark">
+        <div className="site-container relative z-10 w-full">
+          <div className="grid w-full items-center gap-16 lg:grid-cols-[minmax(0,1fr)_430px]">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="eyebrow-dark mb-7">
+                <span className="status-dot" />
+                Data · Systems · Cloud
+              </div>
 
-      {/* Navigation */}
-      <nav className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-7 md:px-10 lg:px-12">
-        <Link
-          href="/"
-          className="group flex items-center gap-3"
-        >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-xs font-semibold tracking-widest text-white backdrop-blur-xl transition duration-300 group-hover:border-cyan-300/30 group-hover:bg-cyan-300/10">
-            AID
-          </span>
+              {/* Each line wipes up from behind its own edge, staggered. */}
+              <h1 className="hero-title">
+                {heroLines.map((line, index) => (
+                  <span key={index} className="line-mask">
+                    <motion.span
+                      initial={reduceMotion ? false : { y: "105%" }}
+                      animate={{ y: "0%" }}
+                      transition={{
+                        duration: 0.95,
+                        delay: 0.12 + index * 0.1,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    >
+                      {line}
+                    </motion.span>
+                  </span>
+                ))}
+              </h1>
 
-          <span className="hidden text-sm text-white/50 sm:block">
-            Andrea I. Ducosin
-          </span>
-        </Link>
+              <p className="hero-lead">
+                I build practical data workflows, technical systems, and cloud projects
+                that make complex information easier to understand and use.
+              </p>
 
-        <div className="flex items-center gap-7 text-sm text-white/50">
-          <Link
-            href="/work"
-            className="transition-colors hover:text-white"
-          >
-            Work
-          </Link>
+              <div className="mt-9 flex flex-wrap items-center gap-4">
+                <Link href="/work" className="button-light group">
+                  View my work
+                  <ArrowUpRight size={16} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </Link>
+                <Link href="/about" className="button-quiet group">
+                  More about me
+                  <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </Link>
+              </div>
+            </motion.div>
 
-          <Link
-            href="/about"
-            className="transition-colors hover:text-white"
-          >
-            About
-          </Link>
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 22, scale: 0.985 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="relative mx-auto w-full max-w-[430px] lg:mx-0 lg:ml-auto"
+              style={{ perspective: 1200 }}
+            >
+              <motion.div
+                className="portrait-frame"
+                style={reduceMotion ? undefined : { rotateX, rotateY, ...parallax }}
+              >
+                <div className="portrait-image">
+                  <Image
+                    src="/images/formal.jpg"
+                    alt="Andrea Ducosin"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 430px, 430px"
+                    className="object-cover object-center"
+                  />
+                  <div className="portrait-vignette" />
+                  <div className="portrait-label">
+                    <span>PORTFOLIO / 2026</span>
+                    <span className="mini-signal" />
+                  </div>
+                </div>
 
-          <Link
-            href="/contact"
-            className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-white transition duration-300 hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-cyan-100"
-          >
-            Contact
-          </Link>
+                <div className="portrait-topline">
+                  <span>ANDREA I. DUCOSIN</span>
+                  <span>01</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="hero-spec-panel"
+                style={reduceMotion ? undefined : { x: panelX, y: panelY }}
+              >
+                <div className="spec-heading">
+                  <span>FOCUS</span>
+                  <strong>Data · Systems · Cloud</strong>
+                </div>
+                <div className="spec-divider" />
+                <div className="spec-row">
+                  <span>01</span>
+                  <Database size={14} />
+                  <strong>Data workflows</strong>
+                </div>
+                <div className="spec-row">
+                  <span>02</span>
+                  <Cloud size={14} />
+                  <strong>AWS / Cloud</strong>
+                </div>
+                <div className="spec-row">
+                  <span>03</span>
+                  <Terminal size={14} />
+                  <strong>IT & Systems</strong>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="floating-code"
+                style={reduceMotion ? undefined : { x: codeX, y: codeY }}
+              >
+                <span>AID/01</span>
+                <span>building in public</span>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
-      </nav>
 
-      {/* Hero */}
-      <section className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl items-center px-6 pb-14 pt-6 md:px-10 md:pb-16 lg:px-12 lg:pt-4">
-        <div className="grid w-full items-center gap-16 lg:grid-cols-[1.15fr_0.85fr]">
-          {/* Main introduction */}
-          <div>
-            <div className="mb-7 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-white/40">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_14px_rgba(102,231,225,0.8)]" />
-              Available for opportunities
+        <a href="#selected-work" className="hero-scroll">
+          <span>Scroll to explore</span>
+          <ArrowDown size={13} />
+        </a>
+      </section>
+
+      {/* Continuous ticker — the one borrowed motion idea that suits a
+          technical portfolio: a running list of the actual stack. */}
+      <Marquee duration={44} label={`Working stack: ${stack.join(", ")}`}>
+        {stack.map((item) => (
+          <span className="marquee-item" key={item}>
+            {item}
+          </span>
+        ))}
+      </Marquee>
+
+      <section id="selected-work" className="section-light">
+        <div className="site-container section-pad relative z-10">
+          <div className="section-kicker-row" data-reveal="fade">
+            <span>01 / Selected work</span>
+            <span>Projects / 2026</span>
+          </div>
+
+          <div className="section-intro-grid">
+            <div data-reveal="left">
+              <p className="section-overline">Selected work</p>
             </div>
-
-            <h1 className="max-w-4xl text-[3.5rem] font-medium leading-[0.92] tracking-[-0.045em] text-white sm:text-6xl md:text-[4.75rem] lg:text-[5.5rem] xl:text-[6.2rem]">
-              Turning
-              <span className="block text-white/40">data, systems,</span>
-              <span className="block">
-                and cloud into{" "}
-                <span className="text-cyan-200">clarity.</span>
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-xl text-base leading-7 text-white/55 md:mt-7 md:text-lg">
-              I&apos;m Andrea — an IT graduate building at the intersection
-              of data analytics, engineering, cloud infrastructure, and
-              practical IT systems.
-            </p>
-
-            <div className="mt-7 flex flex-wrap items-center gap-3 md:mt-8">
-              <Link
-                href="/work"
-                style={{ color: "#071014" }}
-                className="group inline-flex items-center gap-3 rounded-full bg-cyan-200 px-6 py-3.5 text-sm font-semibold transition duration-300 hover:bg-cyan-100"
-              >
-                View my work
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </Link>
-
-              <Link
-                href="/about"
-                className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.035] px-6 py-3.5 text-sm text-white/70 backdrop-blur-xl transition duration-300 hover:border-white/20 hover:bg-white/[0.07] hover:text-white"
-              >
-                More about me
-              </Link>
+            <div data-reveal>
+              <h2 className="section-heading-dark">Projects built to understand, solve, and improve.</h2>
+              <p className="section-copy-dark">
+                Practical work across analytics, data engineering, cloud infrastructure,
+                and technical systems.
+              </p>
             </div>
           </div>
 
-          {/* Glass information panel */}
-          <div className="relative lg:justify-self-end">
-            <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/30 backdrop-blur-2xl md:p-6">
-              {/* Reflection */}
-              <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-cyan-200/10 blur-3xl" />
-
-              <div className="relative">
-                <div className="mb-7 flex items-start justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/35">
-                      Focus
-                    </p>
-                    <p className="mt-2 text-lg text-white">
-                      Data · Systems · Cloud
-                    </p>
-                  </div>
-
-                  <div className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-cyan-200">
-                    2026
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  {disciplines.map((discipline, index) => (
-                    <div
-                      key={discipline}
-                      className="group flex items-center justify-between rounded-2xl border border-white/[0.06] bg-black/10 px-4 py-4 transition duration-300 hover:border-white/15 hover:bg-white/[0.05]"
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono text-xs text-white/25">
-                          0{index + 1}
-                        </span>
-                        <span className="text-sm text-white/75">
-                          {discipline}
-                        </span>
-                      </div>
-
-                      <span className="text-white/20 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-cyan-200">
-                        →
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-7 border-t border-white/[0.07] pt-5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-white/30">
-                      Current direction
-                    </span>
-                    <span className="text-white/65">
-                      Analytics → Cloud
-                    </span>
-                  </div>
-                </div>
+          <div className="project-list reveal-stagger mt-12">
+            {projects.map((project, index) => (
+              <div
+                key={project.title}
+                data-reveal
+                style={{ "--i": index } as CSSProperties}
+              >
+                <Link href={project.href} className="project-row-light group">
+                  <span className="project-number">{project.number}</span>
+                  <span className="project-type">{project.type}</span>
+                  <span className="project-copy">
+                    <strong>{project.title}</strong>
+                    <small>{project.description}</small>
+                  </span>
+                  <ArrowUpRight size={18} className="project-arrow" />
+                </Link>
               </div>
+            ))}
+          </div>
+
+          <div data-reveal="fade">
+            <Link href="/work" className="inline-link-dark group mt-8">
+              View all projects
+              <ArrowUpRight size={14} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-dark">
+        <div className="site-container section-pad relative z-10">
+          <div className="section-kicker-row" data-reveal="fade">
+            <span>02 / Current direction</span>
+            <span>Analytics → Cloud</span>
+          </div>
+
+          <div className="direction-layout">
+            <div className="max-w-2xl" data-reveal="left">
+              <p className="section-overline orange-text">Current direction</p>
+              <h2 className="section-heading-light">From understanding data to building the systems behind it.</h2>
+              <p className="section-copy-light">
+                I&apos;m developing hands-on experience with SQL, Python, Linux, AWS,
+                PostgreSQL, and the infrastructure that connects them.
+              </p>
             </div>
 
-            {/* Floating label */}
-            <div className="absolute -bottom-5 -left-5 hidden rounded-2xl border border-white/10 bg-[#101216]/80 px-4 py-3 shadow-xl backdrop-blur-xl sm:block">
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] text-cyan-200">
-                  AID/01
-                </span>
-                <span className="text-xs text-white/45">
-                  building in public
-                </span>
+            {/* `data-reveal` here also drives the connector lines drawing
+                themselves in, via `.is-revealed .signal-line`. */}
+            <div className="signal-board" data-reveal="right">
+              <div className="signal-board-top">
+                <span>WORKFLOW</span>
+                <span className="live-label"><i /> ACTIVE</span>
+              </div>
+              <div className="signal-flow">
+                <div className="signal-node"><span>01</span><strong>Data</strong></div>
+                <div className="signal-line" />
+                <div className="signal-node"><span>02</span><strong>Pipeline</strong></div>
+                <div className="signal-line" />
+                <div className="signal-node"><span>03</span><strong>Cloud</strong></div>
+              </div>
+              <div className="signal-footer">
+                <span>extract</span><span>transform</span><span>validate</span><span>load</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-white/25 md:flex">
-        <span>Scroll to explore</span>
-        <span className="h-px w-10 bg-white/15" />
-      </div>
+      <section className="section-light">
+        <div className="site-container section-pad relative z-10">
+          <div className="section-kicker-row" data-reveal="fade">
+            <span>03 / Connect</span>
+            <span>Open to opportunities</span>
+          </div>
+
+          <div className="connect-layout" data-reveal>
+            <div>
+              <p className="section-overline">Open to opportunities in</p>
+              <h2 className="connect-heading">Data · Systems · Cloud</h2>
+              <p className="section-copy-dark max-w-xl">
+                Ready to contribute to practical work where data, technology, and
+                problem-solving meet.
+              </p>
+            </div>
+            <Link href="/contact" className="button-dark group">
+              Let&apos;s connect
+              <ArrowUpRight size={16} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
     </main>
   );
 }

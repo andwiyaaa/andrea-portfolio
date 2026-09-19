@@ -1,178 +1,257 @@
+"use client";
+
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { motion } from "motion/react";
+import type { CSSProperties } from "react";
+import SiteNav from "@/components/site-nav";
+import SiteFooter from "@/components/site-footer";
 
 const projects = [
   {
     number: "01",
-    category: "DATA ANALYTICS",
-    title: "Churn at Fit.ly",
+    title: "FIT.LY",
+    subtitle: "Churn Analysis",
     description:
-      "Customer churn analysis using Python, data validation, exploratory analysis, business metrics, and recommendations.",
-    stack: "Python · Pandas · Data Analysis",
+      "Explored customer behavior, engagement, support activity, and churn patterns to identify signals of early disengagement.",
+    tags: ["Data Analytics", "SQL", "Python", "Power BI"],
     href: "/work/fitly-churn",
+    type: "Learning project",
   },
   {
     number: "02",
-    category: "DATA ENGINEERING",
-    title: "E-commerce Data Pipeline",
+    title: "E-COMMERCE",
+    subtitle: "Data Pipeline",
     description:
-      "A structured pipeline for transforming raw e-commerce data into analysis-ready datasets.",
-    stack: "Python · SQL · PostgreSQL",
+      "Built an end-to-end data pipeline that cleans, validates, and loads e-commerce order data into PostgreSQL for analysis.",
+    tags: ["Python", "Pandas", "PostgreSQL", "SQL"],
     href: "/work/ecommerce-pipeline",
+    type: "Engineering project",
   },
   {
     number: "03",
-    category: "DATA ENGINEERING",
-    title: "API → Data Pipeline",
+    title: "API DATA",
+    subtitle: "API → Database Pipeline",
     description:
-      "An API-based ingestion workflow designed to collect, transform, validate, and store structured data.",
-    stack: "Python · REST API · SQL",
+      "Built a small ETL workflow that extracts JSON data from a public REST API, transforms it, validates it, and loads it into PostgreSQL.",
+    tags: ["Python", "REST API", "PostgreSQL", "ETL"],
     href: "/work/api-pipeline",
+    type: "Engineering project",
   },
   {
     number: "04",
-    category: "AWS / CLOUD",
-    title: "AWS Cloud Infrastructure",
+    title: "AWS CLOUD",
+    subtitle: "Cloud Data Pipeline",
     description:
-      "A practical cloud environment exploring AWS infrastructure, Linux, IAM, networking, and deployment concepts.",
-    stack: "AWS · Linux · IAM",
+      "Designed and implemented a hands-on cloud pipeline using Amazon S3, EC2, Python, and PostgreSQL.",
+    tags: ["AWS", "S3", "EC2", "PostgreSQL"],
     href: "/work/aws-cloud",
+    type: "Cloud project",
   },
   {
     number: "05",
-    category: "IT & SYSTEMS",
-    title: "Service Desk Analytics",
+    title: "SERVICE DESK",
+    subtitle: "Support Analytics",
     description:
-      "A support-focused project analyzing tickets, resolution patterns, and operational metrics.",
-    stack: "SQL · Excel · Power BI",
+      "Analyzed a synthetic service desk dataset to examine ticket volume, resolution, SLA performance, satisfaction, and backlog.",
+    tags: ["Python", "SQL", "Analytics", "Data Quality"],
     href: "/work/service-desk",
+    type: "Analytics project",
   },
+];
+
+const capabilities = [
+  "Data Analysis",
+  "Data Engineering",
+  "Systems Analysis",
+  "Technical Support",
+  "QA / Software Testing",
+  "Cloud Computing",
 ];
 
 export default function WorkPage() {
   return (
-    <main className="min-h-screen bg-[#08090c] text-white">
-      {/* Navigation */}
-      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-7 md:px-10 lg:px-12">
-        <Link href="/" className="group flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-xs font-semibold tracking-widest transition duration-300 group-hover:border-cyan-300/30 group-hover:bg-cyan-300/10">
-            AID
-          </span>
+    <main className="site-shell">
+      <SiteNav />
 
-          <span className="hidden text-sm text-white/50 sm:block">
-            Andrea I. Ducosin
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-7 text-sm">
-          <Link href="/work" className="text-white">
-            Work
-          </Link>
-
-          <Link
-            href="/about"
-            className="text-white/45 transition-colors hover:text-white"
-          >
-            About
-          </Link>
-
-          <Link
-            href="/contact"
-            className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-white/70 transition duration-300 hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-white"
-          >
-            Contact
-          </Link>
-        </div>
-      </nav>
-
-      {/* Header */}
-      <section className="mx-auto max-w-7xl px-6 pb-20 pt-8 md:px-10 md:pt-10 lg:px-12">
-        <Link
-            href="/"
-            className="group mb-8 inline-flex items-center gap-2 text-sm text-white/35 transition-colors duration-300 hover:text-white"
-         >
-            <span className="text-base transition-transform duration-300 group-hover:-translate-x-1">
-              ←
-            </span>
-            <span>Back</span>
-        </Link>
-
-        <div className="max-w-4xl">
-          <p className="mb-6 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-white/35">
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />
-            Selected work
-          </p>
-
-          <h1 className="text-5xl font-medium tracking-[-0.045em] sm:text-6xl md:text-7xl">
-            Things I&apos;ve
-            <span className="text-white/35"> built,</span>
-            <br />
-            analyzed, and
-            <span className="text-cyan-200"> explored.</span>
-          </h1>
-
-          <p className="mt-8 max-w-2xl text-base leading-7 text-white/50 md:text-lg">
-            A collection of data, engineering, cloud, and IT projects built
-            through practical coursework, certification work, labs, and
-            independent exploration.
-          </p>
-        </div>
-      </section>
-
-      {/* Projects */}
-      <section className="mx-auto max-w-7xl px-6 pb-32 md:px-10 lg:px-12">
-        <div className="space-y-4">
-          {projects.map((project) => (
-            <Link
-              key={project.number}
-              href={project.href}
-              className="group block"
+      <div className="relative z-10">
+        {/* Header */}
+        <section className="site-container pb-16 pt-36 md:pb-20 md:pt-44">
+          <div className="max-w-5xl">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65 }}
+              className="mb-6 flex items-center gap-3"
             >
-              <article className="relative overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-white/[0.035] p-5 backdrop-blur-xl transition duration-500 hover:border-white/[0.16] hover:bg-white/[0.06] md:p-6 lg:p-7">
-                {/* Hover glow */}
-                <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-300/0 blur-[90px] transition duration-700 group-hover:bg-cyan-300/10" />
+              <span className="h-px w-9 bg-[var(--orange)]" />
 
-                <div className="relative grid gap-5 md:grid-cols-[60px_1fr_auto] md:items-center">
-                  <span className="font-mono text-sm text-white/20">
-                    {project.number}
-                  </span>
+              <span className="text-[10px] uppercase tracking-[0.22em] text-white/40">
+                Selected work
+              </span>
+            </motion.div>
 
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-200/60">
-                      {project.category}
-                    </p>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.04 }}
+              className="display-text max-w-4xl"
+            >
+              Data, systems,{" "}
+              <span className="orange-gradient">and cloud.</span>
+            </motion.h1>
 
-                    <h2 className="mt-2 text-xl font-medium tracking-tight text-white transition duration-300 group-hover:text-cyan-100 md:text-2xl">
-                      {project.title}
-                    </h2>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.12 }}
+              className="body-copy mt-7 max-w-2xl text-base md:text-lg"
+            >
+              A collection of projects exploring data analysis, engineering,
+              cloud infrastructure, systems, and technical problem-solving.
+            </motion.p>
+          </div>
+        </section>
 
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-white/45 md:text-base">
-                      {project.description}
-                    </p>
+        {/* Projects */}
+        <section className="site-container pb-24" data-reveal="fade">
+          <div className="reveal-stagger border-t border-[var(--line)]">
+            {projects.map((project, index) => (
+              <div
+                key={project.href}
+                className="group border-b border-[var(--line)]"
+                data-reveal
+                style={{ "--i": index } as CSSProperties}
+              >
+                <Link
+                  href={project.href}
+                  className="block py-7 md:py-8 lg:py-9"
+                >
+                  <div className="grid gap-5 lg:grid-cols-[56px_minmax(0,1fr)_minmax(260px,390px)_36px] lg:items-center lg:gap-8">
+                    {/* Number */}
+                    <div className="self-start pt-1 text-[10px] tracking-[0.16em] text-white/30 lg:self-auto lg:pt-0">
+                      {project.number}
+                    </div>
 
-                    <p className="mt-3 font-mono text-[11px] text-white/25">
-                      {project.stack}
-                    </p>
+                    {/* Title */}
+                    <div className="min-w-0">
+                      <p className="mb-1.5 text-[9px] uppercase tracking-[0.2em] text-[var(--orange-light)]">
+                        {project.type}
+                      </p>
+
+                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                        <h2 className="text-2xl font-medium tracking-[-0.04em] text-white transition-colors duration-300 group-hover:text-[var(--orange-light)] md:text-3xl">
+                          {project.title}
+                        </h2>
+
+                        <span className="text-sm text-white/45 md:text-base">
+                          {project.subtitle}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Description + tags */}
+                    <div className="lg:pr-2">
+                      <p className="body-copy text-sm leading-6">
+                        {project.description}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="border border-[var(--line)] px-2.5 py-1 text-[8px] uppercase tracking-[0.11em] text-white/42 transition-colors duration-300 group-hover:border-[var(--line-strong)] group-hover:text-white/55"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Arrow */}
+                    <div className="hidden h-9 w-9 items-center justify-center rounded-full border border-[var(--line)] text-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-all duration-300 group-hover:border-[var(--orange)] group-hover:bg-[var(--orange)] group-hover:text-white lg:flex">
+                      <ArrowUpRight size={15} />
+                    </div>
                   </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
 
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/30 transition duration-500 group-hover:translate-x-1 group-hover:border-cyan-300/30 group-hover:text-cyan-200">
-                    →
+        {/* Capabilities */}
+        <section className="site-container pb-24 md:pb-28" data-reveal>
+          <div className="relative overflow-hidden border-y border-[var(--line)] py-8 md:py-10">
+            <div className="pointer-events-none absolute -right-24 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-[var(--orange)]/8 blur-[100px]" />
+
+            <div className="relative grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-start lg:gap-14">
+              <div>
+                <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--orange-light)]">
+                  What I work with
+                </span>
+
+                <h2 className="section-title mt-3 max-w-md">
+                  Technical interests across the stack.
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 border-t border-[var(--line)] sm:grid-cols-2">
+                {capabilities.map((capability, index) => (
+                  <div
+                    key={capability}
+                    className={`flex min-h-[54px] items-center justify-between border-b border-[var(--line)] py-3.5 ${
+                      index % 2 === 0
+                        ? "sm:border-r sm:pr-5"
+                        : "sm:pl-5"
+                    }`}
+                  >
+                    <span className="text-sm text-white/68">
+                      {capability}
+                    </span>
+
+                    <span className="text-[9px] tracking-[0.12em] text-white/22">
+                      0{index + 1}
+                    </span>
                   </div>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      </section>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* Footer note */}
-      <section className="mx-auto max-w-7xl px-6 pb-16 md:px-10 lg:px-12">
-        <div className="border-t border-white/[0.07] pt-6">
-          <p className="text-xs text-white/25">
-            More experiments, labs, and technical work will be added as the
-            portfolio grows.
-          </p>
-        </div>
-      </section>
+        {/* CTA */}
+        <section className="site-container pb-24" data-reveal>
+          <div className="relative overflow-hidden border-t border-[var(--line)] pt-12 md:pt-16">
+            <div className="pointer-events-none absolute -right-32 top-0 h-64 w-64 rounded-full bg-[var(--orange)]/8 blur-[100px]" />
+
+            <p className="text-[9px] uppercase tracking-[0.2em] text-white/32">
+              Have a problem worth solving?
+            </p>
+
+            <div className="mt-4 flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
+              <h2 className="page-title work-cta-title max-w-3xl">
+                Let&apos;s build something{" "}
+                <span className="orange-gradient">useful.</span>
+              </h2>
+
+              <Link
+                href="/contact"
+                className="group inline-flex w-fit shrink-0 items-center gap-3 border-b border-[var(--line-strong)] pb-2 text-xs uppercase tracking-[0.16em] text-white transition-colors hover:border-[var(--orange)] hover:text-white"
+              >
+                Get in touch
+
+                <ArrowUpRight
+                  size={15}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <SiteFooter />
+      </div>
     </main>
   );
 }

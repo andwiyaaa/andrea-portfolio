@@ -4,804 +4,898 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ArrowUpRight,
-  BarChart3,
-  Check,
   Clock3,
-  Database,
   Headphones,
   ShieldCheck,
-  Ticket,
-  TrendingDown,
+  Star,
+  TicketCheck,
 } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { motion } from "motion/react";
+import SiteNav from "@/components/site-nav";
+import SiteFooter from "@/components/site-footer";
 
-const monthlyData = [
-  { month: "Jan", tickets: 245, resolution: 85.31 },
-  { month: "Feb", tickets: 236, resolution: 80.51 },
-  { month: "Mar", tickets: 254, resolution: 79.92 },
-  { month: "Apr", tickets: 264, resolution: 80.3 },
-  { month: "May", tickets: 248, resolution: 79.84 },
-  { month: "Jun", tickets: 253, resolution: 78.66 },
+const pipeline = [
+  {
+    number: "01",
+    title: "Raw tickets",
+    value: "1,508",
+    description: "1,500 original tickets plus 8 intentional duplicates.",
+  },
+  {
+    number: "02",
+    title: "Cleaned data",
+    value: "1,500",
+    description: "Duplicates removed and missing or invalid values handled.",
+  },
+  {
+    number: "03",
+    title: "Validation",
+    value: "13",
+    description: "Data-quality checks completed before database loading.",
+  },
+  {
+    number: "04",
+    title: "PostgreSQL",
+    value: "1,500",
+    description: "Validated tickets loaded into a structured database.",
+  },
 ];
 
-const priorityData = [
+const priorities = [
   {
-    priority: "Critical",
+    label: "Critical",
+    tickets: 43,
+    response: 50.16,
     resolution: 4.64,
     sla: 83.72,
   },
   {
-    priority: "High",
+    label: "High",
+    tickets: 231,
+    response: 122.89,
     resolution: 11.28,
     sla: 81.82,
   },
   {
-    priority: "Medium",
+    label: "Medium",
+    tickets: 662,
+    response: 257,
     resolution: 19.62,
     sla: 52.42,
   },
   {
-    priority: "Low",
+    label: "Low",
+    tickets: 564,
+    response: 368.85,
     resolution: 30.51,
     sla: 30.85,
   },
 ];
 
-const categoryData = [
-  { category: "Software", tickets: 399, reopen: 15.29 },
-  { category: "Network", tickets: 333, reopen: 8.41 },
-  { category: "Hardware", tickets: 327, reopen: 10.09 },
-  { category: "Access", tickets: 290, reopen: 17.59 },
-  { category: "Security", tickets: 147, reopen: 8.16 },
+const categories = [
+  {
+    label: "Software",
+    tickets: 399,
+    response: 264.85,
+    resolution: 21.79,
+    satisfaction: 3.837,
+    reopened: 15.29,
+  },
+  {
+    label: "Network",
+    tickets: 333,
+    response: 266.13,
+    resolution: 21.45,
+    satisfaction: 3.808,
+    reopened: 8.41,
+  },
+  {
+    label: "Hardware",
+    tickets: 327,
+    response: 274.94,
+    resolution: 22.74,
+    satisfaction: 3.814,
+    reopened: 10.09,
+  },
+  {
+    label: "Access",
+    tickets: 290,
+    response: 285.91,
+    resolution: 21.72,
+    satisfaction: 3.945,
+    reopened: 17.59,
+  },
+  {
+    label: "Security",
+    tickets: 147,
+    response: 278.17,
+    resolution: 22.88,
+    satisfaction: 3.933,
+    reopened: 8.16,
+  },
+  {
+    label: "Unknown",
+    tickets: 4,
+    response: 175.25,
+    resolution: 12.76,
+    satisfaction: 4,
+    reopened: 0,
+  },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6 },
+const monthly = [
+  {
+    month: "Jan",
+    tickets: 245,
+    resolved: 209,
+    response: 265.66,
+    resolution: 22.06,
+    satisfaction: 3.823,
+    sla: 85.31,
   },
-};
+  {
+    month: "Feb",
+    tickets: 236,
+    resolved: 190,
+    response: 261.25,
+    resolution: 21.67,
+    satisfaction: 3.805,
+    sla: 80.51,
+  },
+  {
+    month: "Mar",
+    tickets: 254,
+    resolved: 203,
+    response: 275.06,
+    resolution: 21.48,
+    satisfaction: 3.936,
+    sla: 79.92,
+  },
+  {
+    month: "Apr",
+    tickets: 264,
+    resolved: 212,
+    response: 287.2,
+    resolution: 22.57,
+    satisfaction: 3.877,
+    sla: 80.3,
+  },
+  {
+    month: "May",
+    tickets: 248,
+    resolved: 198,
+    response: 276.02,
+    resolution: 22.15,
+    satisfaction: 3.803,
+    sla: 79.84,
+  },
+  {
+    month: "Jun",
+    tickets: 253,
+    resolved: 199,
+    response: 268.09,
+    resolution: 22.04,
+    satisfaction: 3.889,
+    sla: 78.66,
+  },
+];
 
-export default function ServiceDeskAnalyticsPage() {
+const resolutionBuckets = [
+  { label: "Under 4h", tickets: 38, satisfaction: 3.87 },
+  { label: "4–8h", tickets: 127, satisfaction: 3.84 },
+  { label: "8–24h", tickets: 580, satisfaction: 3.87 },
+  { label: "24h+", tickets: 466, satisfaction: 3.85 },
+];
+
+export default function ServiceDeskPage() {
   return (
-    <main className="min-h-screen bg-[#08090c] text-[#f4f4f0]">
-      {/* Navigation */}
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
-        <Link
-          href="/work"
-          className="group flex items-center gap-2 text-sm text-[#9699a3] transition hover:text-[#f4f4f0]"
-        >
-          <ArrowLeft
-            size={16}
-            className="transition-transform group-hover:-translate-x-1"
-          />
-          Back to work
-        </Link>
+    <main className="site-shell">
+      <SiteNav />
 
-        <Link
-          href="https://github.com/andwiyaaa/andrea-portfolio/tree/main/projects/service-desk-analytics"
-          target="_blank"
-          rel="noreferrer"
-          className="group flex items-center gap-2 text-sm text-[#c4c6ce] transition hover:text-[#66e7e1]"
-        >
-          GitHub
-          <ArrowUpRight
-            size={15}
-            className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-          />
-        </Link>
-      </nav>
+      <div className="relative z-10">
+        {/* Hero */}
+        <section className="site-container pb-24 pt-36 md:pb-32 md:pt-44">
+          <Link
+            href="/work"
+            className="group mb-12 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-white/40 transition-colors hover:text-white/80"
+          >
+            <ArrowLeft
+              size={14}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
+            Back to work
+          </Link>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden px-6 pb-20 pt-14 md:px-10 md:pb-28 md:pt-20">
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-[#66e7e1]/[0.045] blur-[130px]" />
-
-        <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-            >
-              <div className="mb-6 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[#66e7e1]">
-                <span className="h-px w-8 bg-[#66e7e1]/50" />
-                Analytics · IT Operations
-              </div>
-
-              <h1 className="max-w-4xl text-5xl font-medium tracking-[-0.04em] md:text-7xl">
-                Service Desk
-                <br />
-                <span className="text-[#9699a3]">Analytics.</span>
-              </h1>
-
-              <p className="mt-7 max-w-2xl text-base leading-7 text-[#9699a3] md:text-lg">
-                A service desk analytics workflow built to turn ticket data
-                into clear operational signals around resolution, SLA
-                performance, satisfaction, and recurring support issues.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-2">
-                {[
-                  "Python",
-                  "PostgreSQL",
-                  "SQL",
-                  "Data Validation",
-                  "Analytics",
-                  "IT Operations",
-                ].map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs text-[#c4c6ce]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Hero metric */}
-            <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl md:p-7"
-            >
-              <div className="mb-8 flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#66e7e1]/10 text-[#66e7e1]">
-                  <Headphones size={19} />
-                </div>
-
-                <span className="text-xs uppercase tracking-[0.16em] text-[#9699a3]">
-                  Dataset overview
+          <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-[var(--orange)]" />
+                <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--orange-light)]">
+                  Data analytics project
                 </span>
               </div>
 
-              <div className="text-5xl font-medium tracking-[-0.04em]">
-                1,500
-              </div>
+              <motion.h1
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75 }}
+                className="display-text mt-7"
+              >
+                Service Desk
+                <br />
+                <span className="orange-gradient">Analytics</span>
+              </motion.h1>
+            </div>
 
-              <p className="mt-2 text-sm text-[#9699a3]">
-                cleaned service desk tickets
-              </p>
-
-              <div className="mt-7 grid grid-cols-2 gap-3">
-                <MiniMetric label="Resolved" value="80.73%" />
-                <MiniMetric label="SLA" value="61.60%" />
-                <MiniMetric label="Satisfaction" value="3.86 / 5" />
-                <MiniMetric label="Reopened" value="12.33%" />
-              </div>
-            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.12 }}
+              className="body-copy max-w-xl"
+            >
+              A ticket analytics pipeline built to turn messy service-desk
+              records into measurable insights around resolution, response
+              time, SLA performance, satisfaction, and backlog.
+            </motion.p>
           </div>
-        </div>
-      </section>
 
-      {/* KPI strip */}
-      <section className="border-y border-white/[0.07] bg-white/[0.018]">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 md:grid-cols-4">
-          <Kpi
-            icon={<Ticket size={17} />}
-            value="1,500"
-            label="Tickets analyzed"
-          />
-          <Kpi
-            icon={<TrendingDown size={17} />}
-            value="80.73%"
-            label="Resolution rate"
-          />
-          <Kpi
-            icon={<Clock3 size={17} />}
-            value="22.0 hrs"
-            label="Avg. resolution"
-          />
-          <Kpi
-            icon={<ShieldCheck size={17} />}
-            value="61.60%"
-            label="Within 24h SLA"
-          />
-        </div>
-      </section>
-
-      {/* Overview */}
-      <section className="px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.7fr_1.3fr]">
-          <SectionLabel number="01" title="Overview" />
-
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-medium tracking-[-0.03em] md:text-4xl">
-              From raw support tickets to operational visibility.
-            </h2>
-
-            <p className="mt-6 leading-7 text-[#9699a3]">
-              This project simulates a service desk environment where support
-              tickets are cleaned, validated, stored in PostgreSQL, analyzed
-              with SQL, and translated into operational metrics.
-            </p>
-
-            <p className="mt-5 leading-7 text-[#9699a3]">
-              The goal is not simply to count tickets. It is to identify where
-              resolution performance slows down, where SLA compliance drops,
-              which categories generate repeat work, and how support outcomes
-              change over time.
-            </p>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <ProcessCard
-                icon={<Database size={17} />}
-                title="Prepare"
-                text="Clean and validate ticket records."
-              />
-              <ProcessCard
-                icon={<BarChart3 size={17} />}
-                title="Analyze"
-                text="Use SQL to measure performance."
-              />
-              <ProcessCard
-                icon={<TrendingDown size={17} />}
-                title="Interpret"
-                text="Turn metrics into operational signals."
-              />
-            </div>
+          <div className="mt-16 grid grid-cols-2 border-y border-[var(--line)] md:grid-cols-4">
+            <Metric value="1,500" label="Final tickets" />
+            <Metric value="80.73%" label="Resolution rate" />
+            <Metric value="22h" label="Avg. resolution" />
+            <Metric value="3.86" label="Avg. satisfaction" />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Monthly trend */}
-      <section className="border-y border-white/[0.07] bg-white/[0.018] px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            number="02"
-            title="Resolution trend"
-            description="Resolution performance gradually declined across the six-month dataset."
-          />
+        {/* Pipeline */}
+        <section className="site-container pb-32" data-reveal>
+          <SectionHeading number="01" label="Data pipeline" />
 
-          <div className="mt-10 rounded-3xl border border-white/10 bg-[#0b0d11] p-5 md:p-7">
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-sm text-[#9699a3]">Monthly resolution rate</p>
-                <p className="mt-1 text-2xl font-medium">85.31% → 78.66%</p>
-              </div>
+          <h2 className="section-title mt-6 max-w-3xl">
+            Clean the operational data before asking it questions.
+          </h2>
 
-              <span className="rounded-full border border-[#66e7e1]/20 bg-[#66e7e1]/[0.06] px-3 py-1 text-xs text-[#66e7e1]">
-                Jan–Jun 2026
-              </span>
-            </div>
+          <div className="mt-10 grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--line)] md:grid-cols-2 lg:grid-cols-4">
+            {pipeline.map((item, index) => (
+              <motion.div
+                key={item.number}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, delay: index * 0.06 }}
+                className="surface-card min-h-[245px] p-7 md:p-8"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] tracking-[0.16em] text-[var(--orange-light)]">
+                    {item.number}
+                  </span>
 
-            <div className="h-[320px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlyData}>
-                  <CartesianGrid
-                    stroke="rgba(255,255,255,0.06)"
-                    vertical={false}
-                  />
-                  <XAxis
-                    dataKey="month"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9699a3", fontSize: 12 }}
-                  />
-                  <YAxis
-                    domain={[70, 90]}
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9699a3", fontSize: 12 }}
-                    tickFormatter={(value) => `${value}%`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#101217",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "12px",
-                      color: "#f4f4f0",
-                    }}
-                    formatter={(value) => [`${value}%`, "Resolution"]}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="resolution"
-                    stroke="#66e7e1"
-                    strokeWidth={2.5}
-                    dot={{ r: 4, fill: "#66e7e1" }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Priority */}
-      <section className="px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            number="03"
-            title="Priority performance"
-            description="Lower-priority tickets show a substantial increase in resolution time and a sharp drop in SLA compliance."
-          />
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-5 md:p-7">
-              <div className="h-[330px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={priorityData} barGap={10}>
-                    <CartesianGrid
-                      stroke="rgba(255,255,255,0.06)"
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="priority"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#9699a3", fontSize: 12 }}
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#9699a3", fontSize: 12 }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        background: "#101217",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "12px",
-                        color: "#f4f4f0",
-                      }}
-                      formatter={(value, name) => [
-                        name === "resolution"
-                          ? `${value} hrs`
-                          : `${value}%`,
-                        name === "resolution"
-                          ? "Resolution time"
-                          : "SLA rate",
-                      ]}
-                    />
-                    <Bar
-                      dataKey="resolution"
-                      name="resolution"
-                      fill="#66e7e1"
-                      radius={[6, 6, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="grid gap-3">
-              {priorityData.map((item) => (
-                <div
-                  key={item.priority}
-                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.035] p-5"
-                >
-                  <div>
-                    <p className="font-medium">{item.priority}</p>
-                    <p className="mt-1 text-xs text-[#9699a3]">
-                      Avg. resolution
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="text-xl font-medium">
-                      {item.resolution} hrs
-                    </p>
-                    <p className="mt-1 text-xs text-[#66e7e1]">
-                      {item.sla}% SLA
-                    </p>
-                  </div>
+                  <span className="text-[9px] text-white/25">
+                    {item.value}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="mt-6 rounded-2xl border border-[#66e7e1]/10 bg-[#66e7e1]/[0.035] p-5 md:p-6">
-            <p className="text-sm leading-6 text-[#c4c6ce]">
-              <span className="text-[#66e7e1]">Key signal:</span> average
-              resolution time increases from 4.64 hours for Critical tickets
-              to 30.51 hours for Low-priority tickets, while SLA compliance
-              falls from 83.72% to 30.85%.
-            </p>
-          </div>
-        </div>
-      </section>
+                <h3 className="mt-12 text-xl font-medium tracking-[-0.03em]">
+                  {item.title}
+                </h3>
 
-      {/* Category */}
-      <section className="border-y border-white/[0.07] bg-white/[0.018] px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            number="04"
-            title="Category workload"
-            description="Software, Network, and Hardware account for the largest ticket volumes, while Access has the highest reopen rate."
-          />
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-3xl border border-white/10 bg-[#0b0d11] p-5 md:p-7">
-              <div className="h-[330px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={categoryData} layout="vertical">
-                    <CartesianGrid
-                      stroke="rgba(255,255,255,0.06)"
-                      horizontal={false}
-                    />
-                    <XAxis
-                      type="number"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#9699a3", fontSize: 12 }}
-                    />
-                    <YAxis
-                      dataKey="category"
-                      type="category"
-                      width={75}
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#9699a3", fontSize: 12 }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        background: "#101217",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "12px",
-                        color: "#f4f4f0",
-                      }}
-                    />
-                    <Bar
-                      dataKey="tickets"
-                      fill="#9d8cff"
-                      radius={[0, 6, 6, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {categoryData.map((item) => (
-                <div
-                  key={item.category}
-                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4"
-                >
-                  <div>
-                    <p className="font-medium">{item.category}</p>
-                    <p className="mt-1 text-xs text-[#9699a3]">
-                      {item.tickets} tickets
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="text-sm text-[#c4c6ce]">
-                      {item.reopen}% reopened
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-2xl border border-[#9d8cff]/10 bg-[#9d8cff]/[0.035] p-5 md:p-6">
-            <p className="text-sm leading-6 text-[#c4c6ce]">
-              <span className="text-[#9d8cff]">Key signal:</span> Access
-              tickets have the highest reopen rate at 17.59%, suggesting an
-              area worth monitoring for repeat support work.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Operational insights */}
-      <section className="px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            number="05"
-            title="Operational signals"
-            description="The analysis highlights several areas that a support team could monitor."
-          />
-
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <Insight
-              number="01"
-              title="Resolution is trending down"
-              text="The monthly resolution rate moves from 85.31% in January to 78.66% in June."
-            />
-
-            <Insight
-              number="02"
-              title="Low priority needs attention"
-              text="Low-priority tickets average 30.51 hours to resolve and have the lowest SLA rate."
-            />
-
-            <Insight
-              number="03"
-              title="Access generates repeat work"
-              text="Access has the highest category reopen rate at 17.59%."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Technical workflow */}
-      <section className="border-y border-white/[0.07] bg-white/[0.018] px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            number="06"
-            title="Technical workflow"
-            description="A complete analytics workflow from raw ticket records to dashboard-ready insights."
-          />
-
-          <div className="mt-10 grid gap-3 md:grid-cols-4">
-            <WorkflowStep
-              number="01"
-              title="CSV"
-              text="Raw service desk tickets"
-            />
-            <WorkflowStep
-              number="02"
-              title="Python"
-              text="Clean, transform, validate"
-            />
-            <WorkflowStep
-              number="03"
-              title="PostgreSQL"
-              text="Store structured records"
-            />
-            <WorkflowStep
-              number="04"
-              title="SQL + Dashboard"
-              text="Analyze and communicate"
-            />
-          </div>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            <TechnicalCard
-              icon={<Check size={18} />}
-              title="Data quality"
-              items={[
-                "1,500 validated records",
-                "0 duplicate ticket IDs",
-                "0 invalid response times",
-                "0 invalid satisfaction scores",
-              ]}
-            />
-
-            <TechnicalCard
-              icon={<Database size={18} />}
-              title="Technology"
-              items={[
-                "Python + Pandas",
-                "PostgreSQL 18",
-                "SQL analytics",
-                "Next.js + Recharts",
-              ]}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Project context */}
-      <section className="px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-7 md:p-10">
-            <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-              <div className="max-w-2xl">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#9699a3]">
-                  Project context
+                <p className="body-copy mt-4 text-sm">
+                  {item.description}
                 </p>
+              </motion.div>
+            ))}
+          </div>
 
-                <h2 className="mt-4 text-3xl font-medium tracking-[-0.03em]">
-                  Built as a hands-on analytics project.
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-[9px] uppercase tracking-[0.13em] text-white/30">
+            <span>CSV</span>
+            <ArrowUpRight size={11} />
+            <span>Python</span>
+            <ArrowUpRight size={11} />
+            <span>Validation</span>
+            <ArrowUpRight size={11} />
+            <span>PostgreSQL</span>
+            <ArrowUpRight size={11} />
+            <span>SQL</span>
+          </div>
+        </section>
+
+        {/* Data quality */}
+        <section className="site-container pb-32" data-reveal>
+          <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
+            <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+              <div>
+                <SectionHeading number="02" label="Data quality" />
+
+                <h2 className="section-title mt-6">
+                  13 validation checks passed.
                 </h2>
 
-                <p className="mt-5 leading-7 text-[#9699a3]">
-                  The dataset is synthetic and was created specifically to
-                  demonstrate an end-to-end service desk analytics workflow.
-                  The project focuses on data preparation, validation,
-                  relational storage, SQL analysis, and communicating
-                  operational findings.
+                <p className="body-copy mt-5 max-w-2xl text-sm">
+                  The raw dataset intentionally included common operational
+                  data problems so the pipeline could demonstrate cleaning and
+                  validation rather than assuming perfect source data.
                 </p>
               </div>
 
-              <Link
-                href="https://github.com/andwiyaaa/andrea-portfolio/tree/main/projects/service-desk-analytics"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#66e7e1] px-5 py-3 text-sm font-medium"
-                style={{ color: "#071014" }}
-              >
-                View project on GitHub
-                <ArrowUpRight size={16} />
-              </Link>
+              <ShieldCheck
+                size={28}
+                strokeWidth={1.3}
+                className="text-[var(--orange-light)]"
+              />
+            </div>
+
+            <div className="mt-10 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                "8 duplicate ticket IDs",
+                "10 missing agents",
+                "5 negative response times",
+                "4 missing categories",
+                "Duplicate removal",
+                "Response-time correction",
+                "Category handling",
+                "Agent handling",
+                "Date validation",
+                "Status validation",
+                "SLA validation",
+                "Resolution fields",
+                "Final row structure",
+              ].map((item, index) => (
+                <div
+                  key={item}
+                  className="border border-[var(--line)] bg-[var(--surface-3)] px-4 py-4"
+                >
+                  <span className="text-[9px] text-[var(--orange-light)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <p className="mt-3 text-xs text-white/50">{item}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="border-t border-white/[0.07] px-6 py-10 md:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 text-sm text-[#9699a3] md:flex-row">
-          <Link
-            href="/work"
-            className="transition hover:text-[#f4f4f0]"
-          >
-            ← Back to selected work
-          </Link>
+        {/* KPI overview */}
+        <section className="site-container pb-32" data-reveal>
+          <SectionHeading number="03" label="Service desk KPIs" />
 
-          <span>Service Desk Analytics · Data · Systems</span>
-        </div>
-      </footer>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <KpiCard
+              icon={<TicketCheck size={20} />}
+              value="1,211"
+              label="Resolved / closed"
+              detail="80.73% of all tickets"
+            />
+
+            <KpiCard
+              icon={<Clock3 size={20} />}
+              value="272.47m"
+              label="Average response"
+              detail="Across the final dataset"
+            />
+
+            <KpiCard
+              icon={<Headphones size={20} />}
+              value="22h"
+              label="Average resolution"
+              detail="Across resolved tickets"
+            />
+
+            <KpiCard
+              icon={<Star size={20} />}
+              value="3.86"
+              label="Average satisfaction"
+              detail="Five-point scale"
+            />
+          </div>
+
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-9">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-white/30">
+                SLA
+              </p>
+
+              <p className="mt-5 text-4xl font-medium tracking-[-0.05em]">
+                61.6%
+              </p>
+
+              <p className="body-copy mt-4 text-sm">
+                Tickets within the 24-hour SLA window using the Python
+                calculation across the final dataset.
+              </p>
+            </div>
+
+            <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-9">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-white/30">
+                Reopened
+              </p>
+
+              <p className="mt-5 text-4xl font-medium tracking-[-0.05em]">
+                12.33%
+              </p>
+
+              <p className="body-copy mt-4 text-sm">
+                185 tickets were reopened, compared with 1,315 tickets that
+                were not reopened.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Priority */}
+        <section className="site-container pb-32" data-reveal>
+          <SectionHeading number="04" label="Priority analysis" />
+
+          <div className="mt-10 overflow-x-auto overflow-y-hidden rounded-[var(--radius-lg)] border border-[var(--line)]">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px] border-collapse">
+                <thead>
+                  <tr className="bg-[var(--surface-3)] text-left text-[9px] uppercase tracking-[0.14em] text-white/30">
+                    <th className="px-5 py-4 font-normal">Priority</th>
+                    <th className="px-5 py-4 font-normal">Tickets</th>
+                    <th className="px-5 py-4 font-normal">
+                      Avg. response
+                    </th>
+                    <th className="px-5 py-4 font-normal">
+                      Avg. resolution
+                    </th>
+                    <th className="px-5 py-4 font-normal">
+                      SLA
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {priorities.map((item) => (
+                    <tr
+                      key={item.label}
+                      className="border-t border-[var(--line)] bg-[var(--surface-2)]"
+                    >
+                      <td className="px-5 py-5 text-sm text-white/70">
+                        {item.label}
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/45">
+                        {item.tickets}
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/55">
+                        {item.response.toFixed(2)} min
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/55">
+                        {item.resolution.toFixed(2)} h
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/65">
+                        {item.sla.toFixed(2)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p className="mt-5 max-w-3xl text-[9px] leading-5 text-white/25">
+            These SLA percentages use the Python/CSV calculation, which
+            evaluates tickets against the 24-hour SLA. The SQL analysis uses
+            a different denominator for its priority-level SLA calculation,
+            so those figures are kept separate.
+          </p>
+        </section>
+
+        {/* Resolution */}
+        <section className="site-container pb-32" data-reveal>
+          <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
+            <div>
+              <SectionHeading number="05" label="Resolution time" />
+
+              <h2 className="section-title mt-6">
+                Most resolved tickets fell inside the 8–24 hour range.
+              </h2>
+
+              <p className="body-copy mt-5 max-w-md text-sm">
+                Resolution buckets make the operational distribution easier to
+                read than a single average.
+              </p>
+            </div>
+
+            <div className="surface-card rounded-[var(--radius-lg)] p-6 md:p-9">
+              <div className="space-y-6">
+                {resolutionBuckets.map((item) => {
+                  const width = (item.tickets / 580) * 100;
+
+                  return (
+                    <div key={item.label}>
+                      <div className="mb-2 flex items-center justify-between text-[10px]">
+                        <span className="text-white/50">{item.label}</span>
+
+                        <span className="text-white/70">
+                          {item.tickets} tickets
+                        </span>
+                      </div>
+
+                      <div className="h-2 overflow-hidden rounded-full bg-[var(--surface-raised)]">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${width}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.7 }}
+                          className="h-full rounded-full bg-gradient-to-r from-[var(--orange-deep)] to-[var(--orange-light)]"
+                        />
+                      </div>
+
+                      <p className="mt-2 text-[9px] text-white/25">
+                        Satisfaction: {item.satisfaction.toFixed(2)} / 5
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Category */}
+        <section className="site-container pb-32" data-reveal>
+          <SectionHeading number="06" label="Category analysis" />
+
+          <div className="mt-10 overflow-x-auto overflow-y-hidden rounded-[var(--radius-lg)] border border-[var(--line)]">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[920px] border-collapse">
+                <thead>
+                  <tr className="bg-[var(--surface-3)] text-left text-[9px] uppercase tracking-[0.14em] text-white/30">
+                    <th className="px-5 py-4 font-normal">Category</th>
+                    <th className="px-5 py-4 font-normal">Tickets</th>
+                    <th className="px-5 py-4 font-normal">Response</th>
+                    <th className="px-5 py-4 font-normal">Resolution</th>
+                    <th className="px-5 py-4 font-normal">Satisfaction</th>
+                    <th className="px-5 py-4 font-normal">Reopened</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {categories.map((item) => (
+                    <tr
+                      key={item.label}
+                      className="border-t border-[var(--line)] bg-[var(--surface-2)]"
+                    >
+                      <td className="px-5 py-5 text-sm text-white/70">
+                        {item.label}
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/45">
+                        {item.tickets}
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/55">
+                        {item.response.toFixed(2)} min
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/55">
+                        {item.resolution.toFixed(2)} h
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/65">
+                        {item.satisfaction.toFixed(2)}
+                      </td>
+
+                      <td className="px-5 py-5 text-sm text-white/65">
+                        {item.reopened.toFixed(2)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Monthly */}
+        <section className="site-container pb-32" data-reveal>
+          <SectionHeading number="07" label="Monthly trend" />
+
+          <div className="mt-10 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {monthly.map((item, index) => (
+              <motion.div
+                key={item.month}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.04 }}
+                className="surface-card rounded-[var(--radius-md)] p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--orange-light)]">
+                    {item.month}
+                  </span>
+
+                  <span className="text-[9px] text-white/25">
+                    {item.tickets} tickets
+                  </span>
+                </div>
+
+                <div className="mt-8 grid grid-cols-2 gap-x-5 gap-y-6">
+                  <SmallStat
+                    value={item.resolved.toString()}
+                    label="Resolved"
+                  />
+
+                  <SmallStat
+                    value={`${item.sla.toFixed(1)}%`}
+                    label="SLA"
+                  />
+
+                  <SmallStat
+                    value={`${item.response.toFixed(0)}m`}
+                    label="Response"
+                  />
+
+                  <SmallStat
+                    value={`${item.resolution.toFixed(1)}h`}
+                    label="Resolution"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Backlog */}
+        <section className="site-container pb-32" data-reveal>
+          <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
+              <SectionHeading number="08" label="Active backlog" />
+
+              <h2 className="section-title mt-7">
+                289 tickets remained open or in progress.
+              </h2>
+
+              <div className="mt-9 grid grid-cols-2 gap-3">
+                <div className="border border-[var(--line)] bg-[var(--surface-3)] p-5">
+                  <p className="text-3xl font-medium tracking-[-0.05em]">
+                    150
+                  </p>
+                  <p className="mt-2 text-[9px] uppercase tracking-[0.13em] text-white/30">
+                    In progress
+                  </p>
+                </div>
+
+                <div className="border border-[var(--line)] bg-[var(--surface-3)] p-5">
+                  <p className="text-3xl font-medium tracking-[-0.05em]">
+                    139
+                  </p>
+                  <p className="mt-2 text-[9px] uppercase tracking-[0.13em] text-white/30">
+                    Open
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-white/30">
+                Reopened tickets
+              </p>
+
+              <p className="mt-6 text-4xl font-medium tracking-[-0.05em]">
+                185
+              </p>
+
+              <p className="body-copy mt-4 text-sm">
+                Reopened tickets represented 12.33% of the final dataset.
+              </p>
+
+              <div className="mt-8 h-2 overflow-hidden rounded-full bg-[var(--surface-raised)]">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[var(--orange-deep)] to-[var(--orange-light)]"
+                  style={{ width: "12.33%" }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Takeaway */}
+        <section className="site-container pb-32" data-reveal>
+          <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-strong)] bg-[var(--surface-3)] px-7 py-14 md:px-12 md:py-20">
+            <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[var(--orange)]/15 blur-[110px]" />
+
+            <span className="relative text-[10px] uppercase tracking-[0.2em] text-[var(--orange-light)]">
+              Takeaway
+            </span>
+
+            <h2 className="relative mt-6 max-w-4xl text-3xl font-medium leading-[1.08] tracking-[-0.045em] md:text-5xl">
+              Turn support tickets into
+              <span className="orange-gradient"> operational signals.</span>
+            </h2>
+
+            <p className="relative mt-7 max-w-2xl text-sm leading-7 text-white/45">
+              The project connects data cleaning, validation, SQL analysis,
+              and service-desk metrics to make response, resolution, SLA,
+              satisfaction, and backlog patterns easier to investigate.
+            </p>
+          </div>
+        </section>
+
+        {/* Tools */}
+        <section className="site-container pb-32" data-reveal>
+          <div className="surface-card rounded-[var(--radius-lg)] p-7 md:p-10">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-white/30">
+              Technologies
+            </p>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {[
+                "Python",
+                "Pandas",
+                "PostgreSQL",
+                "SQL",
+                "CSV",
+                "Data Validation",
+                "Data Analysis",
+              ].map((tool) => (
+                <span
+                  key={tool}
+                  className="rounded-full border border-[var(--line)] bg-[var(--surface-3)] px-4 py-2 text-[9px] uppercase tracking-[0.12em] text-white/50"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Navigation */}
+        <section className="site-container pb-28" data-reveal>
+          <div className="grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--line)] md:grid-cols-2">
+            <ProjectLink
+              href="/work/aws-cloud"
+              eyebrow="Previous project"
+              title="AWS Cloud Data Pipeline"
+              direction="left"
+            />
+
+            <ProjectLink
+              href="/work/fitly-churn"
+              eyebrow="Explore another analysis"
+              title="Fit.ly Churn Analysis"
+              direction="right"
+            />
+          </div>
+        </section>
+
+        <SiteFooter />
+      </div>
     </main>
   );
 }
 
-function MiniMetric({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] p-3">
-      <p className="text-[11px] uppercase tracking-[0.12em] text-[#9699a3]">
-        {label}
-      </p>
-      <p className="mt-1 text-sm font-medium">{value}</p>
-    </div>
-  );
-}
-
-function Kpi({
-  icon,
+function Metric({
   value,
   label,
 }: {
-  icon: React.ReactNode;
   value: string;
   label: string;
 }) {
   return (
-    <div className="border-r border-white/[0.07] p-5 last:border-r-0 md:p-6">
-      <div className="flex items-center gap-2 text-[#66e7e1]">
-        {icon}
-        <span className="text-xs uppercase tracking-[0.12em] text-[#9699a3]">
-          {label}
-        </span>
-      </div>
-      <p className="mt-3 text-2xl font-medium tracking-[-0.03em] md:text-3xl">
+    <div className="border-b border-[var(--line)] px-0 py-6 md:border-b-0 md:border-r md:px-7 md:py-8 last:border-r-0">
+      <p className="text-2xl font-medium tracking-[-0.04em] text-white md:text-3xl">
         {value}
       </p>
-    </div>
-  );
-}
 
-function SectionLabel({
-  number,
-  title,
-}: {
-  number: string;
-  title: string;
-}) {
-  return (
-    <div className="flex items-start gap-4">
-      <span className="font-mono text-xs text-[#66e7e1]">{number}</span>
-      <span className="text-xs uppercase tracking-[0.18em] text-[#9699a3]">
-        {title}
-      </span>
+      <p className="mt-2 text-[9px] uppercase tracking-[0.14em] text-white/35">
+        {label}
+      </p>
     </div>
   );
 }
 
 function SectionHeading({
   number,
-  title,
-  description,
+  label,
 }: {
   number: string;
-  title: string;
-  description: string;
+  label: string;
 }) {
   return (
-    <div className="max-w-3xl">
-      <SectionLabel number={number} title={title} />
-      <h2 className="mt-5 text-3xl font-medium tracking-[-0.03em] md:text-5xl">
-        {title}
-      </h2>
-      <p className="mt-4 leading-7 text-[#9699a3]">{description}</p>
+    <div className="flex items-center gap-3">
+      <span className="text-[9px] tracking-[0.16em] text-[var(--orange-light)]">
+        {number}
+      </span>
+
+      <span className="h-px w-7 bg-[var(--line-strong)]" />
+
+      <span className="text-[10px] uppercase tracking-[0.18em] text-white/35">
+        {label}
+      </span>
     </div>
   );
 }
 
-function ProcessCard({
+function KpiCard({
   icon,
-  title,
-  text,
+  value,
+  label,
+  detail,
 }: {
   icon: React.ReactNode;
-  title: string;
-  text: string;
+  value: string;
+  label: string;
+  detail: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-      <div className="text-[#66e7e1]">{icon}</div>
-      <p className="mt-4 text-sm font-medium">{title}</p>
-      <p className="mt-1 text-xs leading-5 text-[#9699a3]">{text}</p>
+    <div className="surface-card rounded-[var(--radius-lg)] p-6 md:p-7">
+      <div className="text-[var(--orange-light)]">{icon}</div>
+
+      <p className="mt-10 text-3xl font-medium tracking-[-0.05em]">
+        {value}
+      </p>
+
+      <p className="mt-3 text-sm text-white/70">{label}</p>
+
+      <p className="mt-2 text-[9px] uppercase tracking-[0.12em] text-white/25">
+        {detail}
+      </p>
     </div>
   );
 }
 
-function Insight({
-  number,
-  title,
-  text,
+function SmallStat({
+  value,
+  label,
 }: {
-  number: string;
-  title: string;
-  text: string;
+  value: string;
+  label: string;
 }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
-      <span className="font-mono text-xs text-[#66e7e1]">{number}</span>
-      <h3 className="mt-8 text-lg font-medium">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-[#9699a3]">{text}</p>
+    <div>
+      <p className="text-lg font-medium tracking-[-0.03em]">{value}</p>
+
+      <p className="mt-1 text-[8px] uppercase tracking-[0.12em] text-white/25">
+        {label}
+      </p>
     </div>
   );
 }
 
-function WorkflowStep({
-  number,
+function ProjectLink({
+  href,
+  eyebrow,
   title,
-  text,
+  direction,
 }: {
-  number: string;
+  href: string;
+  eyebrow: string;
   title: string;
-  text: string;
+  direction: "left" | "right";
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-      <span className="font-mono text-xs text-[#66e7e1]">{number}</span>
-      <h3 className="mt-5 text-lg font-medium">{title}</h3>
-      <p className="mt-2 text-sm text-[#9699a3]">{text}</p>
-    </div>
-  );
-}
+    <Link
+      href={href}
+      className="surface-card group flex min-h-[150px] items-end justify-between p-7 transition-transform duration-300 hover:-translate-y-1 md:p-9"
+    >
+      <div>
+        <p className="text-[9px] uppercase tracking-[0.16em] text-white/30">
+          {eyebrow}
+        </p>
 
-function TechnicalCard({
-  icon,
-  title,
-  items,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  items: string[];
-}) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-6">
-      <div className="flex items-center gap-3">
-        <div className="text-[#66e7e1]">{icon}</div>
-        <h3 className="font-medium">{title}</h3>
+        <p className="mt-3 text-xl font-medium tracking-[-0.03em] text-white/80 group-hover:text-white">
+          {title}
+        </p>
       </div>
 
-      <div className="mt-5 space-y-3">
-        {items.map((item) => (
-          <div
-            key={item}
-            className="flex items-center gap-3 text-sm text-[#c4c6ce]"
-          >
-            <Check size={14} className="shrink-0 text-[#66e7e1]" />
-            {item}
-          </div>
-        ))}
-      </div>
-    </div>
+      {direction === "left" ? (
+        <ArrowLeft
+          size={17}
+          className="text-white/30 transition-transform duration-300 group-hover:-translate-x-1 group-hover:text-[var(--orange-light)]"
+        />
+      ) : (
+        <ArrowUpRight
+          size={17}
+          className="text-white/30 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[var(--orange-light)]"
+        />
+      )}
+    </Link>
   );
 }
