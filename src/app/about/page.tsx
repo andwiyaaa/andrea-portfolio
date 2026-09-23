@@ -22,10 +22,28 @@ const education = [
 ];
 
 const certifications = [
-  { year: "JUNE 2025", title: "Cyber Threat Management", issuer: "Cisco Networking Academy · DICT-ITU DTC Initiative", icon: ShieldCheck },
-  { year: "DECEMBER 2025", title: "Data Analysis: SQL, Tableau, Power BI & Excel", issuer: "Udemy", icon: Award },
+  {
+    year: "JUNE 2025",
+    title: "Cyber Threat Management",
+    issuer: "Cisco Networking Academy · DICT-ITU DTC Initiative",
+    icon: ShieldCheck,
+    image: "/images/Cyber Threat Management Certification_page-0001.jpg",
+  },
+  {
+    year: "DECEMBER 2025",
+    title: "Data Analysis: SQL, Tableau, Power BI & Excel",
+    issuer: "Udemy",
+    icon: Award,
+    image: "/images/Data Analysis Certification_page-0001.jpg",
+  },
+  {
+    year: "SEPTEMBER 2026",
+    title: "Data Analyst",
+    issuer: "DataCamp · Credential DA0023570486959",
+    icon: Award,
+    image: "/images/DA0023570486959.jpg",
+  },
 ];
-
 const organizations = [
   { year: "2025 — 2026", name: "TUP Manila — COMPASS", role: "Academic and Research Affairs Committee Member", icon: Users },
   { year: "2025 — 2026", name: "Google Developer Group on Campus — TUP Manila", role: "Member", icon: Cloud },
@@ -220,15 +238,16 @@ export default function AboutPage() {
           <div className="section-kicker-row" data-reveal="fade"><span>03 / Credentials & community</span><span>Learning beyond the classroom</span></div>
           <div className="about-credentials-grid">
             <div data-reveal="left">
-              <div className="section-overline-row"><p className="section-overline">Certifications</p><span className="section-overline-note">2 earned · 2025</span></div>
+              <div className="section-overline-row"><p className="section-overline">Certifications</p><span className="section-overline-note">3 earned · 2025–2026</span></div>
               <div className="credentials-list">
-                {certifications.map(({ year, title, issuer, icon: Icon }) => (
+                {certifications.map(({ year, title, issuer, icon: Icon, image }) => (
                   <article className="credential-row" key={title}>
                     <div className="credential-icon"><Icon size={16} /></div>
                     <div className="credential-copy">
                       <span>{year}</span>
                       <h3>{title}</h3>
                       <p>{issuer}</p>
+                      <a href={image} target="_blank" rel="noopener noreferrer">View certificate ↗</a>
                     </div>
                   </article>
                 ))}
